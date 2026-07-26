@@ -54,4 +54,4 @@ Podczas gdy napis "$10,000" trzyma się na ekranie, w tle B-roll przełącza si�
 6. **Cykl 3-4 wariantów dowodu pod jedną liczbą-twierdzeniem** — przy mocnym claimie (np. "wyniki od 20-30 zł/lead") pokazać w tle kilka RÓŻNYCH zrzutów/case studies zamiast jednego, żeby sugerować powtarzalność.
 
 ## Uczciwa uwaga
-To analiza TECHNIKI i STRUKTURY montażu do inspiracji, nie kopiowania treści. Temat (agencja AI/no-code buduje strony) jest z innej branży niż nasza (marketing dla HVAC/wypożyczalni) — przenosimy metodę montażu, nie przekaz ani markę.
+To analiza TECHNIKI i STRUKTURY montażu do inspiracji, nie kopiowania treści. Temat jest z innej branży niż Twoja — przenosimy metodę montażu, nie przekaz ani markę.

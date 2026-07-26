@@ -50,4 +50,4 @@ Na starcie wideo widoczna jest ciemna, zaokrąglona plakietka z nazwą skilla (k
 6. **Jeden kształt plakietki, dwa użycia** — nasza karta CTA na końcu rolki może być tym samym kształtem/stylem co ewentualna plakietka kontekstowa na starcie, tylko w innym kolorze (neutralny na starcie → ciepły/pomarańczowy przy CTA), żeby sama zmiana koloru sygnalizowała widzowi "teraz jest ask".
 
 ## Uczciwa uwaga
-To analiza TECHNIKI i STRUKTURY montażu do inspiracji, nie kopiowania treści. Temat (skill Claude Code do budowy stron) jest z innej branży niż Meta Ads/HVAC — przenosimy metodę (split-screen, przejścia, dowód wizualny), nie przekaz.
+To analiza TECHNIKI i STRUKTURY montażu do inspiracji, nie kopiowania treści. Temat (skill Claude Code do budowy stron) jest z innej branży, przenosimy metodę (split-screen, przejścia, dowód wizualny), nie przekaz.

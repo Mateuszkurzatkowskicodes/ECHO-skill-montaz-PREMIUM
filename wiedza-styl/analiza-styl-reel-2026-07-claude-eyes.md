@@ -3,7 +3,7 @@
 Analiza klatka po klatce (metoda `/claude-watch`: hook 15fps w arkuszach kontaktowych + reszta co 3,5s + transkrypcja whisper, korekta ręczna). Długość: 22,9s. Język: angielski.
 
 ## Temat (dla kontekstu, NIE kopiujemy treści)
-Autor reklamuje własny skill do Claude Code, który pozwala Claude "oglądać" wideo klatka po klatce zamiast tylko czytać transkrypcję — czyli koncepcyjnie to dokładnie to samo narzędzie co nasz `/claude-watch`. Ciekawy zbieg okoliczności, zero związku z HVAC/marketingiem, więc analizujemy WYŁĄCZNIE technikę.
+Autor reklamuje własny skill do Claude Code, który pozwala Claude "oglądać" wideo klatka po klatce zamiast tylko czytać transkrypcję — czyli koncepcyjnie to dokładnie to samo narzędzie co nasz `/claude-watch`. Ciekawy zbieg okoliczności, zero związku z tematem Twoich rolek, więc analizujemy WYŁĄCZNIE technikę.
 
 ## Transkrypt (skorygowany względem klatek)
 
@@ -59,4 +59,4 @@ Przed statystyką "30 minut → 90 sekund" pojawia się osobna krótka scena z s
 6. **Jedno spójne zapętlone tło jako opcja zamienna dla multi-B-roll** — do materiałów, gdzie nie mamy nagrania z realizacji (posty czysto edukacyjne / o AI / o procesie agencji), rozważyć jeden subtelny zapętlony motyw graficzny jako baza zamiast układania wielu różnych cutawayów — szybsze w produkcji, nadal dynamiczne dzięki ruchowi tła.
 
 ## Uczciwa uwaga
-To analiza TECHNIKI i STRUKTURY montażu do inspiracji, nie kopiowania treści. Temat reela (skill do Claude Code) nie ma nic wspólnego z HVAC/marketingiem — przenosimy metodę wizualną, nie przekaz.
+To analiza TECHNIKI i STRUKTURY montażu do inspiracji, nie kopiowania treści. Temat reela (skill do Claude Code) nie musi mieć nic wspólnego z Twoim tematem, przenosimy metodę wizualną, nie przekaz.
