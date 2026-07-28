@@ -298,25 +298,31 @@ export const GlitchText: React.FC<{tekst?: string; sila?: number}> = ({
   const czyGlitch = los > 0.55;
   const dx = czyGlitch ? (los - 0.5) * sila * 2 : 0;
 
+  // Rozmiar dobierany do dlugosci, zeby dluzsze slowo nie wyjechalo poza kadr.
+  const fs = Math.min(168, Math.round(940 / Math.max(1, tekst.length * 0.62)));
+
   const wspolne: React.CSSProperties = {
-    position: 'absolute',
     fontFamily: SANS,
-    fontSize: 168,
+    fontSize: fs,
     fontWeight: 900,
     letterSpacing: -2,
     whiteSpace: 'nowrap',
+    lineHeight: 1.1,
   };
+  // Kopie kolorowe leza NA bialym napisie. Bialy zostaje w normalnym przeplywie,
+  // bo inaczej rodzic ma zerowa szerokosc i calosc ucieka w prawo.
+  const kopia: React.CSSProperties = {...wspolne, position: 'absolute', top: 0, left: 0};
 
   return (
     <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center'}}>
-      <div style={{position: 'relative'}}>
-        <div style={{...wspolne, color: '#ff2d55', transform: `translate(${-dx}px, ${dx / 3}px)`, mixBlendMode: 'screen'}}>
+      <div style={{position: 'relative', display: 'inline-block'}}>
+        <div style={{...kopia, color: '#ff2d55', transform: `translate(${-dx}px, ${dx / 3}px)`, mixBlendMode: 'screen'}}>
           {tekst}
         </div>
-        <div style={{...wspolne, color: '#2dffea', transform: `translate(${dx}px, ${-dx / 3}px)`, mixBlendMode: 'screen'}}>
+        <div style={{...kopia, color: '#2dffea', transform: `translate(${dx}px, ${-dx / 3}px)`, mixBlendMode: 'screen'}}>
           {tekst}
         </div>
-        <div style={{...wspolne, color: '#fff'}}>{tekst}</div>
+        <div style={{...wspolne, color: '#fff', position: 'relative'}}>{tekst}</div>
       </div>
     </AbsoluteFill>
   );
@@ -375,16 +381,20 @@ export const MarkerHighlight: React.FC<{tekst?: string; kolor?: string}> = ({
   const {fps} = useVideoConfig();
   const post = spring({frame: frame - 6, fps, config: {damping: 200}});
 
+  // Dluzsze haslo samo schodzi z rozmiarem, zeby zmiescic sie w kadrze.
+  // Bez tego napis w rodzaju "POTRZEBUJA FACHOWCA" wychodzil poza oba brzegi.
+  const fs = Math.min(92, Math.round(900 / Math.max(1, tekst.length * 0.6)));
+
   return (
-    <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center'}}>
-      <div style={{position: 'relative', padding: '0 24px'}}>
+    <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', padding: '0 60px'}}>
+      <div style={{position: 'relative', display: 'inline-block', padding: '0 20px', maxWidth: 960}}>
         <div
           style={{
             position: 'absolute',
             left: 0,
             right: 0,
-            bottom: 12,
-            height: 34,
+            bottom: Math.round(fs * 0.12),
+            height: Math.round(fs * 0.36),
             transformOrigin: 'left center',
             transform: `scaleX(${post})`,
             background: kolor,
@@ -397,10 +407,12 @@ export const MarkerHighlight: React.FC<{tekst?: string; kolor?: string}> = ({
           style={{
             position: 'relative',
             fontFamily: SANS,
-            fontSize: 92,
+            fontSize: fs,
             fontWeight: 900,
             color: '#fff',
-            whiteSpace: 'nowrap',
+            textAlign: 'center',
+            lineHeight: 1.15,
+            textShadow: '0 4px 22px rgba(0,0,0,.55)',
           }}
         >
           {tekst}

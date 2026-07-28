@@ -62,8 +62,14 @@ def czas_ass(sek):
     return f"{g}:{m:02d}:{s:05.2f}"
 
 
-def zbuduj_ass(segmenty, maks_slow=4):
-    """Napisy karaoke: 2-4 slowa na linijke, ciete na naturalnych pauzach."""
+# Przy Fontsize 86 i marginesach 60 w kadr 1080 wchodzi bezpiecznie okolo
+# 20 znakow. Dluzsza linijka wyjezdza poza oba brzegi - sprawdzone na realnym
+# montazu ("SYSTEM POZYSKIWANIA KLIENTOW" bylo ucinane).
+MAKS_ZNAKOW = 20
+
+
+def zbuduj_ass(segmenty, maks_slow=3):
+    """Napisy karaoke: 2-3 slowa na linijke, ciete na pauzach i na dlugosci."""
     linie = [STYL_ASS]
     for seg in segmenty:
         slowa = seg.get("words") or []
@@ -76,8 +82,16 @@ def zbuduj_ass(segmenty, maks_slow=4):
 
         grupa = []
         for w in slowa:
+            czysty = w["word"].strip()
+            dlugosc_po = sum(len(g["word"].strip()) + 1 for g in grupa) + len(czysty)
+
+            # Slowo nie miesci sie w biezacej linijce: zamknij ja przed nim.
+            if grupa and dlugosc_po > MAKS_ZNAKOW:
+                linie.append(linia_karaoke(grupa))
+                grupa = []
+
             grupa.append(w)
-            koniec_zdania = w["word"].strip().endswith((".", ",", "!", "?", ":"))
+            koniec_zdania = czysty.endswith((".", ",", "!", "?", ":"))
             if len(grupa) >= maks_slow or koniec_zdania:
                 linie.append(linia_karaoke(grupa))
                 grupa = []

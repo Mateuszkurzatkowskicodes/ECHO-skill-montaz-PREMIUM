@@ -49,9 +49,17 @@ const D = {
   punchCzas: 0.35       // jak szybko punch wygasa
 };
 
-const W = podglad ? 540 : (plan.szerokosc || D.szerokosc);
-const H = podglad ? 960 : (plan.wysokosc || D.wysokosc);
+const W_DOCEL = plan.szerokosc || D.szerokosc;
+const H_DOCEL = plan.wysokosc || D.wysokosc;
+const W = podglad ? Math.round(W_DOCEL / 2) : W_DOCEL;
+const H = podglad ? Math.round(H_DOCEL / 2) : H_DOCEL;
 const FPS = podglad ? 30 : (plan.fps || D.fps);
+
+// W podglądzie baza jest mniejsza, więc nakładki i ich pozycje MUSZĄ zjechać
+// razem z nią. Bez tego podgląd pokazuje efekty w złych miejscach albo poza
+// kadrem i nie da się na nim niczego zweryfikować.
+const SKALA = W / W_DOCEL;
+const skaluj = (v) => Math.round(v * SKALA);
 
 /** Ścieżka bezpieczna dla parsera filtrów ffmpeg na Windows. */
 function sciezkaDlaFiltra(p) {
@@ -105,9 +113,12 @@ let biezacy = "baza";
   wejscia.push(n.plik);
   const idx = kolejneWejscie++;
   const et = `nak${i}`;
-  const x = n.x !== undefined ? n.x : 0;
-  const y = n.y !== undefined ? n.y : 0;
-  const skala = n.szerokosc ? `scale=${n.szerokosc}:-1,` : "";
+  const x = skaluj(n.x !== undefined ? n.x : 0);
+  const y = skaluj(n.y !== undefined ? n.y : 0);
+  // Szerokość: albo podana w planie, albo naturalna. W podglądzie i tak
+  // przeskalowana tym samym współczynnikiem co baza.
+  const szer = n.szerokosc ? skaluj(n.szerokosc) : null;
+  const skala = szer ? `scale=${szer}:-1,` : (podglad ? `scale=iw*${SKALA}:-1,` : "");
   czesci.push(`[${idx}:v]${skala}setpts=PTS+${n.od}/TB[${et}]`);
   // enable na KAŻDEJ nakładce, inaczej zostaje do końca materiału
   czesci.push(
