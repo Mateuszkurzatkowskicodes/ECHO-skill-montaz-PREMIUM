@@ -16,6 +16,10 @@ import {Rolka1Fx} from './compsRolka1';
 import {Rolka2Fx} from './compsRolka2';
 import {Rolka3Fx} from './compsRolka3';
 import {Porownanie} from './compsPorownanie';
+import {
+  ChapterLabel, MultiCountUp, LightSweep, BadgeDwaKolory, KartaCzasu, StrzalkaWskaznik,
+  GlitchText, ScrambleText, MarkerHighlight, MoneyCounter, TypewriterCard, EmojiBurst,
+} from './compsPremium';
 
 const FPS = 60;
 
@@ -277,6 +281,27 @@ export const Root: React.FC = () => {
         height={1920}
       />
       {/* --- porownanie promujace kurs (zwykly vs po kursie) --- */}
+
+      {/* ================== BIBLIOTEKA PREMIUM ==================
+          Kazda sterowana propsami, wiec jedna kompozycja obsluguje wiele
+          momentow. Podmiana tresci bez pisania nowego komponentu:
+            npx remotion render src/index.ts chapter-label out.mov \
+              --props='{"numer":"02","tytul":"ROZWIAZANIE"}'
+          Nakladki na nagranie renderowac z alfa:
+            --codec=prores --prores-profile=4444 --pixel-format=yuva444p10le --image-format=png
+      */}
+      <Composition id="chapter-label" component={ChapterLabel} durationInFrames={Math.round(3.0 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="multi-countup" component={MultiCountUp} durationInFrames={Math.round(4.0 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="light-sweep" component={LightSweep} durationInFrames={Math.round(1.6 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="badge-2kolory" component={BadgeDwaKolory} durationInFrames={Math.round(3.5 * FPS)} fps={FPS} width={1080} height={520} />
+      <Composition id="karta-czasu" component={KartaCzasu} durationInFrames={Math.round(1.8 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="strzalka" component={StrzalkaWskaznik} durationInFrames={Math.round(2.2 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="glitch" component={GlitchText} durationInFrames={Math.round(1.4 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="scramble" component={ScrambleText} durationInFrames={Math.round(2.4 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="marker" component={MarkerHighlight} durationInFrames={Math.round(2.6 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="money-counter" component={MoneyCounter} durationInFrames={Math.round(3.2 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="typewriter" component={TypewriterCard} durationInFrames={Math.round(4.5 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="emoji-burst" component={EmojiBurst} durationInFrames={Math.round(2.0 * FPS)} fps={FPS} width={1080} height={1920} />
     </>
   );
 };

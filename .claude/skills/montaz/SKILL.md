@@ -3,7 +3,93 @@ name: montaz
 description: Montaż wideo w stylu "AI business YouTube" — shorty (9:16, do 60s) i długie formaty (16:9). Plan montażu, napisy, cięcia, muzyka, przekazanie do Premiere Pro lub automat przez ffmpeg. Użyj, gdy user prosi o montaż, edycję wideo, shorta, rolkę lub plan montażu nagrania.
 ---
 
-# Montaż wideo — ECHO
+# Montaż wideo — ECHO (wersja PREMIUM)
+
+> **To jest wersja Premium skilla.** Wszystko z wersji podstawowej działa tak samo,
+> plus cztery rzeczy poniżej. Zacznij od nich, bo zmieniają sposób pracy.
+
+## PREMIUM 1: nie pisz ffmpeg z ręki, użyj generatora
+
+**Zasada nadrzędna: NIE wypisuj `-filter_complex` ręcznie.** Napisz krótki plan JSON
+i przepuść go przez `narzedzia/buduj-filtr.mjs`.
+
+```bash
+node narzedzia/buduj-filtr.mjs plan.json --podglad --zapisz podglad   # szybki podgląd
+node narzedzia/buduj-filtr.mjs plan.json --zapisz montaz              # pełna jakość
+bash montaz.sh
+```
+
+Plan to CAŁOŚĆ, jaką musisz napisać:
+
+```json
+{
+  "wejscie": "nagranie.mp4",
+  "wyjscie": "gotowe.mp4",
+  "dlugosc": 42,
+  "napisy": "napisy.ass",
+  "muzyka": { "plik": "muzyka.mp3", "glosnosc": 0.13 },
+  "zoom": { "amplituda": 0.015, "okres": 6 },
+  "punche": [ { "t": 3.2 }, { "t": 11.8 } ],
+  "cutawaye": [ { "plik": "interlude.mp4", "od": 14.0, "do": 17.5 } ],
+  "nakladki": [ { "plik": "money.mov", "od": 22.0, "do": 25.2, "y": 1100 } ]
+}
+```
+
+**Dlaczego to ważne:** generator sam stosuje wszystkie pułapki opisane na dole tego
+pliku (zoom przez `zoompan` ze zmienną `time`, `enable=` na każdej nakładce, apostrofy
+w ścieżkach Windows, brak podwójnego użycia labela). Pisząc filtr ręcznie musisz o tym
+pamiętać za każdym razem i zużywasz na to mnóstwo tokenów. Z generatorem plan ma
+kilkanaście linijek zamiast kilkuset.
+
+## PREMIUM 2: transkrypcja z pamięcią podręczną i gotowymi napisami
+
+```bash
+python narzedzia/transkrypcja.py nagranie.mp4 --ass napisy.ass
+```
+
+Pierwsze uruchomienie liczy whisper normalnie, każde kolejne na tym samym pliku jest
+natychmiastowe (wynik zapisany pod skrótem pliku). Od razu wypluwa gotowy `.ass`
+z napisami karaoke w stylu ECHO (Bahnschrift, MarginV=520, `\kf` słowo-po-słowie,
+cięcie na interpunkcji). Nie składaj napisów ręcznie.
+
+## PREMIUM 3: najpierw podgląd, potem pełna jakość
+
+Renderuj `--podglad` (540x960, 30 fps, preset ultrafast) do akceptacji przez usera.
+Pełna jakość dopiero po „ok". Przy kilku iteracjach oszczędza to więcej czasu niż
+cokolwiek innego w tym procesie.
+
+## PREMIUM 4: rozszerzona biblioteka efektów
+
+Ponad bazowe kompozycje dochodzi `remotion-montaz/src/compsPremium.tsx`, 12 sztuk,
+wszystkie sterowane propsami, więc jedna obsługuje wiele momentów:
+
+| id kompozycji | co robi | kiedy używać |
+|---|---|---|
+| `chapter-label` | etykieta „01 / PROBLEM" w rogu | oznaczanie etapów scenariusza |
+| `multi-countup` | kilka liczb rosnących równolegle | gdy jest więcej niż jedna metryka |
+| `light-sweep` | diagonalny błysk | ożywienie nieruchomego zrzutu ekranu |
+| `badge-2kolory` | plakietka neutralna → ciepła | przejście z kontekstu w CTA |
+| `karta-czasu` | „20 MINUT PÓŹNIEJ" | przeskoki czasowe przed/po |
+| `strzalka` | rysowana strzałka z podpisem | wskazanie miejsca zamiast ramki |
+| `glitch` | rozjazd kanałów RGB | mocny akcent, zerwanie uwagi |
+| `scramble` | tekst deszyfrowany znak po znaku | odsłanianie wyniku |
+| `marker` | podkreślenie markerem | jedno kluczowe zdanie |
+| `money-counter` | licznik pieniędzy | oszczędność albo koszt |
+| `typewriter` | wpisywanie promptu | pokazanie rozmowy z AI |
+| `emoji-burst` | wybuch emoji | reakcja, moment kulminacyjny |
+
+Podmiana treści bez pisania nowego komponentu:
+
+```bash
+npx remotion render src/index.ts chapter-label out.mov \
+  --props='{"numer":"02","tytul":"ROZWIAZANIE"}' \
+  --codec=prores --prores-profile=4444 --pixel-format=yuva444p10le --image-format=png
+```
+
+Pierwsze sześć pozycji z tabeli to dokładnie te techniki, które wersja podstawowa
+wymienia niżej jako „warto wypróbować" po analizie cudzych rolek. Tutaj są gotowe.
+
+---
 
 Montujesz (lub planujesz montaż) nagrań w stylu referencyjnym: kanały typu "AI business" na YouTube (talking head + screen recording, szybkie tempo, animowane napisy). Referencje usera: "4 Ways to Make Money With Claude AI", "The New AI Business Model Making Millions In 2026", "How to Make Viral AI UGC for TikTok Ads" itp.
 

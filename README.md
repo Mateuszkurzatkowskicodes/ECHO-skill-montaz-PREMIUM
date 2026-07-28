@@ -1,36 +1,77 @@
-# ECHO — Skill montażu z AI
+# ECHO — Skill montażu z AI, wersja PREMIUM
 
-To jest zestaw, dzięki któremu AI montuje krótkie i długie filmy w stylu ECHO:
-napisy karaoke, zoomy, animowane efekty (Remotion), muzyka i cięcia.
+Rozszerzona wersja zestawu, dzięki któremu AI montuje Twoje rolki: napisy karaoke,
+zoomy, animowane efekty (Remotion), muzyka i cięcia.
 
-**Dostęp tylko dla kursantów.** Nie udostępniaj dalej.
+**Dostęp tylko dla posiadaczy pakietu Premium.** Nie udostępniaj dalej.
 
-## Co jest w środku
+## Instalacja
 
-- `.claude/skills/montaz/SKILL.md` — autorski skill montażu (serce zestawu).
-- `remotion-montaz/` — biblioteka efektów: **68 gotowych kompozycji** (hooki, pełnoekranowe interludia, cutawaye, split-screen przed/po, animowany kursor na zrzutach ekranu, badge, mockupy DM i komentarzy, karty poradnikowe, miniaturki).
-- `wiedza-styl/` — analizy stylu montażu, na których uczył się skill.
+Skopiuj komendę ze swojej sekcji Premium na stronie kursu i wklej do Claude.
+Reszta zrobi się sama: podmieni skill na wersję Premium i doinstaluje nowe efekty.
 
-## Aktualizacja z 26.07.2026 (bezpłatna dla wszystkich kursantów)
+Jeśli masz w skillu własne notatki o swoim stylu montażu, **nie zostaną skasowane**,
+komenda pilnuje, żeby je przenieść.
 
-Dorzuciłem wszystko, co zbudowałem przy własnych rolkach po premierze kursu:
+## Co dochodzi ponad wersję podstawową
 
-- **Z 14 do 68 kompozycji Remotion.** Nowe rodziny efektów: komplety pod całe rolki (`Rolka1Fx`, `Rolka2Fx`, `Rolka3Fx`), split-screen porównawczy przed i po (`Porownanie`), animowany kursor jeżdżący po zrzucie ekranu (`MouseScreen`), zestawy cutawayów tematycznych, karty poradnikowe i miniaturki pod YouTube.
-- **Skill uzupełniony o trzy pułapki ffmpeg**, które kosztowały mnie godziny: segfault przy zoomie robionym przez `scale` (rozwiązanie: `zoompan`), segfault przy błysku przez `color=`, oraz apostrofy w ścieżkach przy `-filter_complex_script` na Windows.
+**1. Generator filtra ffmpeg** — `narzedzia/buduj-filtr.mjs`
 
-Żeby to pobrać, wystarczy poprosić Claude: „zaktualizuj repo ze skillem montażu i przekopiuj skill na nowo".
+Zamiast pisać setki linii `-filter_complex` przy każdym montażu, AI pisze kilkanaście
+linijek planu JSON, a resztę generuje narzędzie. Sam dokłada zabezpieczenia przed
+błędami, które w wersji podstawowej trzeba pamiętać za każdym razem (zoom przez
+`zoompan`, `enable=` na każdej nakładce, apostrofy w ścieżkach Windows).
+**Efekt: montaż zużywa wyraźnie mniej tokenów i rzadziej się wykłada.**
 
-**Podmień logo na swoje:** plik `remotion-montaz/public/brand-bug.png` jest pusty (przezroczysty).
-Wrzuć tam swoje logo w tej samej nazwie, a pojawi się w rogu kadru wszędzie tam, gdzie efekt tego używa.
+**2. Transkrypcja z pamięcią podręczną** — `narzedzia/transkrypcja.py`
 
-## Jak tego użyć
+Whisper liczy się raz na plik, każde kolejne uruchomienie na tym samym nagraniu jest
+natychmiastowe. Od razu wypluwa gotowe napisy karaoke `.ass` w stylu ECHO, bez
+składania ich ręcznie.
 
-Nie musisz nic robić ręcznie. W kursie masz jedną komendę, którą wklejasz do
-Claude Code. Ona pobiera to repo i wszystkie potrzebne narzędzia, a skill ląduje
-w Twojej bazie umiejętności. Potem po prostu wrzucasz nagranie i piszesz
-"zmontuj mi tę rolkę".
+**3. Tryb szybkiego podglądu**
+
+Render 540x960 przy 30 fps do akceptacji, pełna jakość dopiero po „ok".
+Przy kilku poprawkach to największa oszczędność czasu w całym procesie.
+
+**4. Dwanaście nowych efektów** — `remotion-montaz/src/compsPremium.tsx`
+
+`chapter-label`, `multi-countup`, `light-sweep`, `badge-2kolory`, `karta-czasu`,
+`strzalka`, `glitch`, `scramble`, `marker`, `money-counter`, `typewriter`,
+`emoji-burst`.
+
+Wszystkie sterowane propsami, więc jedna kompozycja obsługuje wiele momentów bez
+pisania nowego kodu. Sześć pierwszych to techniki, które wersja podstawowa wymieniała
+jako „warto wypróbować" po analizie cudzych rolek. Tutaj są już gotowe.
+
+## Co jest w środku (z wersji podstawowej)
+
+- `.claude/skills/montaz/SKILL.md` — skill montażu, rozszerzony o instrukcje Premium
+- `remotion-montaz/` — **80 kompozycji** (68 bazowych + 12 Premium)
+- `wiedza-styl/` — analizy stylu montażu, na których uczył się skill
+- `narzedzia/` — narzędzia Premium (generator filtra, transkrypcja)
+
+**Podmień logo na swoje:** plik `remotion-montaz/public/brand-bug.png` jest pusty
+(przezroczysty). Wrzuć tam swoje logo pod tą samą nazwą, a pojawi się w rogu kadru
+wszędzie tam, gdzie efekt tego używa.
+
+## Aktualizacje
+
+Co miesiąc dostajesz mailem nową wersję z ulepszeniami i usprawnieniami, a przy
+zmianach w Claude poprawki, żeby Twój montaż zawsze był na najwyższym poziomie.
+Nic nie musisz robić, wszystko leci na adres, z którego kupiłeś pakiet.
+
+## Pomoc
+
+Utknąłeś albo coś wychodzi inaczej, niż chciałeś? Napisz na
+**echo.marketing.contact@gmail.com**, podeślij swoją rolkę i napisz, jaki efekt chcesz
+osiągnąć. Nagrywam osobistą odpowiedź wideo w ciągu 3 dni roboczych.
 
 ## Muzyka
 
-W repo nie ma plików muzycznych (kwestia licencji). AI pobiera muzykę
-royalty-free na bieżąco. Do rolek używaj wyłącznie muzyki bez praw autorskich.
+W repo nie ma plików muzycznych (kwestia licencji). AI pobiera muzykę royalty-free
+na bieżąco. Do rolek używaj wyłącznie muzyki bez praw autorskich.
+
+---
+
+echo · [echomarketing.biz.pl](https://echomarketing.biz.pl)
