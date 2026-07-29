@@ -86,14 +86,31 @@ for (const p of plan.punche || []) {
   zoomWyr += `+if(between(time,${p.t},${p.t + czas}),${sila}*exp(-(time-${p.t})*${(3 / czas).toFixed(2)}),0)`;
 }
 
+// JAKOŚĆ: zoompan powiększa obraz, więc jeśli najpierw zejdziemy do docelowych
+// 1080x1920, to zoom rozciąga już zmniejszony materiał i obraz robi się miękki.
+// Dlatego pracujemy z zapasem (1.5x) i dopiero na końcu schodzimy do docelowej
+// rozdzielczości filtrem lanczos, który przy zmniejszaniu wyostrza.
+const ZAPAS = podglad ? 1 : 1.5;
+const WP = Math.round((W * ZAPAS) / 2) * 2;
+const HP = Math.round((H * ZAPAS) / 2) * 2;
+const zejscie = ZAPAS > 1 ? `,scale=${W}:${H}:flags=lanczos` : "";
+
 czesci.push(
-  `[0:v]scale=${W}:${H}:force_original_aspect_ratio=increase,` +
-  `crop=${W}:${H},` +
-  `zoompan=z='${zoomWyr}':d=1:s=${W}x${H}:fps=${FPS},setsar=1[baza]`
+  `[0:v]scale=${WP}:${HP}:force_original_aspect_ratio=increase:flags=lanczos,` +
+  `crop=${WP}:${HP},` +
+  `zoompan=z='${zoomWyr}':d=1:s=${WP}x${HP}:fps=${FPS}${zejscie},setsar=1[baza]`
 );
 let biezacy = "baza";
 
-/* ---------- 2. cutawaye pełnoekranowe ---------- */
+/* ---------- 2. napisy (POD interludiami) ----------
+   Napisy ida zaraz po bazie, zeby pelnoekranowe interludium je zakrylo.
+   Tak wymaga styl: pod slamami i w interludiach napisow nie ma. */
+if (plan.napisy) {
+  czesci.push(`[${biezacy}]ass=${sciezkaDlaFiltra(plan.napisy)}[z_napisami]`);
+  biezacy = "z_napisami";
+}
+
+/* ---------- 3. cutawaye pełnoekranowe ---------- */
 (plan.cutawaye || []).forEach((c, i) => {
   wejscia.push(c.plik);
   const idx = kolejneWejscie++;
@@ -108,7 +125,7 @@ let biezacy = "baza";
   biezacy = `po_${et}`;
 });
 
-/* ---------- 3. nakładki z alfą (Remotion) ---------- */
+/* ---------- 4. nakładki z alfą (Remotion), na samej górze ---------- */
 (plan.nakladki || []).forEach((n, i) => {
   wejscia.push(n.plik);
   const idx = kolejneWejscie++;
@@ -127,10 +144,8 @@ let biezacy = "baza";
   biezacy = `po_${et}`;
 });
 
-/* ---------- 4. napisy ---------- */
-if (plan.napisy) {
-  czesci.push(`[${biezacy}]ass=${sciezkaDlaFiltra(plan.napisy)}[wyj_v]`);
-} else {
+/* ---------- 5. wyjście wideo ---------- */
+{
   czesci.push(`[${biezacy}]null[wyj_v]`);
 }
 
@@ -151,9 +166,12 @@ if (plan.muzyka && plan.muzyka.plik) {
 /* ---------- złożenie polecenia ---------- */
 const filtr = czesci.join(";\n");
 const wejsciaArg = wejscia.map((w) => `-i "${w}"`).join(" ");
+// Finalny render idzie wysoko: crf 15 plus sufit bitrate'u, żeby szybkie
+// ruchy i ziarno nie rozsypywały się w bloki po kompresji Instagrama.
 const jakosc = podglad
   ? "-c:v libx264 -preset ultrafast -crf 30"
-  : "-c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p";
+  : "-c:v libx264 -preset slow -crf 15 -maxrate 18M -bufsize 36M " +
+    "-profile:v high -level 4.2 -pix_fmt yuv420p -movflags +faststart";
 const wyjscie = podglad
   ? (plan.wyjscie || "out.mp4").replace(/\.mp4$/, "-PODGLAD.mp4")
   : (plan.wyjscie || "out.mp4");

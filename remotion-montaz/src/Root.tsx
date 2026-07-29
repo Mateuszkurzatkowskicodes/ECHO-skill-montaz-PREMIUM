@@ -20,6 +20,10 @@ import {
   ChapterLabel, MultiCountUp, LightSweep, BadgeDwaKolory, KartaCzasu, StrzalkaWskaznik,
   GlitchText, ScrambleText, MarkerHighlight, MoneyCounter, TypewriterCard, EmojiBurst,
 } from './compsPremium';
+import {
+  HookSlam, SlowoBomba, InterludeWymowka, BadgePrawda, VsKlienci,
+  InterludeSystem, StrikePolecenia,
+} from './compsSezon';
 
 const FPS = 60;
 
@@ -302,6 +306,15 @@ export const Root: React.FC = () => {
       <Composition id="money-counter" component={MoneyCounter} durationInFrames={Math.round(3.2 * FPS)} fps={FPS} width={1080} height={1920} />
       <Composition id="typewriter" component={TypewriterCard} durationInFrames={Math.round(4.5 * FPS)} fps={FPS} width={1080} height={1920} />
       <Composition id="emoji-burst" component={EmojiBurst} durationInFrames={Math.round(2.0 * FPS)} fps={FPS} width={1080} height={1920} />
+
+      {/* ============ ROLKA "SEZON" (fachowcy, wymowka sezonowa) ============ */}
+      <Composition id="sz-hook" component={HookSlam} durationInFrames={Math.round(2.6 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="sz-bomba" component={SlowoBomba} durationInFrames={Math.round(1.6 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="sz-wymowka" component={InterludeWymowka} durationInFrames={Math.round(3.2 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="sz-prawda" component={BadgePrawda} durationInFrames={Math.round(2.9 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="sz-vs" component={VsKlienci} durationInFrames={Math.round(3.6 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="sz-strike" component={StrikePolecenia} durationInFrames={Math.round(2.6 * FPS)} fps={FPS} width={1080} height={1920} />
+      <Composition id="sz-system" component={InterludeSystem} durationInFrames={Math.round(4.4 * FPS)} fps={FPS} width={1080} height={1920} />
     </>
   );
 };
